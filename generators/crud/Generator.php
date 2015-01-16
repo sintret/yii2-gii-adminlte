@@ -33,6 +33,7 @@ use yii\web\Controller;
 class Generator extends \yii\gii\Generator {
 
     public $modelClass;
+    public $moduleID;
     public $controllerClass;
     public $viewPath;
     public $baseControllerClass = 'yii\web\Controller';
@@ -45,7 +46,7 @@ class Generator extends \yii\gii\Generator {
      * @inheritdoc
      */
     public function getName() {
-        return 'CRUD Generator with adminlte and sintret';
+        return 'Sintret CRUD Generator';
     }
 
     /**
