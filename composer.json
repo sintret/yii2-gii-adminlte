@@ -1,0 +1,32 @@
+{
+    "name": "sintret/yii2-gii-adminlte",
+    "description": "Yii2 Generator extension for Gii plugin with adminlte",
+    "keywords": [
+        "yii2",
+        "adminlte",
+        "gii",
+        "personalize"
+    ],
+    "homepage": "https://github.com/sintret/yii2-gii-adminlte",
+    "type": "yii2-extension",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/sintret/yii2-gii-adminlte/issues",
+        "source": "https://github.com/sintret/yii2-gii-adminlte"
+    },
+    "authors": [
+        {
+            "name": "Andy Fitria",
+            "homepage": "http://sintret.com"
+        }
+    ],
+    "require": {
+        "php":">=5.4.0"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "sintret\\gii\\": ""
+        }
+    }
+}
