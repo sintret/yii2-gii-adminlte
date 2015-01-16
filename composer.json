@@ -1,11 +1,12 @@
 {
     "name": "sintret/yii2-gii-adminlte",
-    "description": "Yii2 Generator extension for Gii plugin with adminlte",
+    "description": "Yii2 Generator extension for Gii plugin with adminlte and base on dynagrid. upload excel to system to with log upload",
     "keywords": [
         "yii2",
         "adminlte",
         "gii",
-        "personalize"
+        "personalize",
+        "dynagrid"
     ],
     "homepage": "https://github.com/sintret/yii2-gii-adminlte",
     "type": "yii2-extension",
@@ -21,7 +22,7 @@
         }
     ],
     "require": {
-        "php":">=5.4.0"
+        "php":">=5.3.0"
     },
     "minimum-stability": "dev",
     "autoload": {
