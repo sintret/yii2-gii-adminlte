@@ -26,6 +26,8 @@ use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
+use sintret\gii\components\SintretImagine;
+
 
 /**
  * Description of CropBehaviour
@@ -242,7 +244,7 @@ class CropBehavior extends Behavior {
                 $name = $this->files[$value]->name;
                 if ($this->files[$value]->saveAs($folder . $name)) {
 
-                    sintret\gii\components\SintretImagine::thumbnail($folder . $name, $this->width, $this->height)
+                    SintretImagine::thumbnail($folder . $name, $this->width, $this->height)
                             ->save(Yii::getAlias($thumb . $name), ['quality' => $this->quality]);
                 }
             }
