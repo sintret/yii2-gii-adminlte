@@ -137,7 +137,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     public function behaviors() {
         return [
             'image' => [
-                'class' => \app\components\CropBehavior::className(),
+                'class' => \sintret\gii\components\CropBehavior::className(),
                 'paths' => self::$imagePath . '{id}/',
                 'width'=>200,
             ],

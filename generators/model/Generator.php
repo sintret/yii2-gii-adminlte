@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -21,8 +22,8 @@ use yii\base\NotSupportedException;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Generator extends \yii\gii\Generator
-{
+class Generator extends \yii\gii\Generator {
+
     public $db = 'db';
     public $ns = 'app\models';
     public $tableName;
@@ -32,32 +33,29 @@ class Generator extends \yii\gii\Generator
     public $generateLabelsFromComments = false;
     public $useTablePrefix = false;
 
-
     /**
      * @inheritdoc
      */
-    public function getName()
-    {
+    public function getName() {
         return 'Sintret Model Generator';
     }
 
     /**
      * @inheritdoc
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return 'This generator generates an ActiveRecord class for the specified database table.';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return array_merge(parent::rules(), [
             [['db', 'ns', 'tableName', 'modelClass', 'baseClass'], 'filter', 'filter' => 'trim'],
-            [['ns'], 'filter', 'filter' => function($value) { return trim($value, '\\'); }],
-
+            [['ns'], 'filter', 'filter' => function($value) {
+            return trim($value, '\\');
+        }],
             [['db', 'ns', 'tableName', 'baseClass'], 'required'],
             [['db', 'modelClass'], 'match', 'pattern' => '/^\w+$/', 'message' => 'Only word characters are allowed.'],
             [['ns', 'baseClass'], 'match', 'pattern' => '/^[\w\\\\]+$/', 'message' => 'Only word characters and backslashes are allowed.'],
@@ -77,8 +75,7 @@ class Generator extends \yii\gii\Generator
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return array_merge(parent::attributeLabels(), [
             'ns' => 'Namespace',
             'db' => 'Database Connection ID',
@@ -93,8 +90,7 @@ class Generator extends \yii\gii\Generator
     /**
      * @inheritdoc
      */
-    public function hints()
-    {
+    public function hints() {
         return array_merge(parent::hints(), [
             'ns' => 'This is the namespace of the ActiveRecord class to be generated, e.g., <code>app\models</code>',
             'db' => 'This is the ID of the DB application component.',
@@ -124,8 +120,7 @@ class Generator extends \yii\gii\Generator
     /**
      * @inheritdoc
      */
-    public function autoCompleteData()
-    {
+    public function autoCompleteData() {
         $db = $this->getDbConnection();
         if ($db !== null) {
             return [
@@ -141,24 +136,21 @@ class Generator extends \yii\gii\Generator
     /**
      * @inheritdoc
      */
-    public function requiredTemplates()
-    {
+    public function requiredTemplates() {
         return ['model.php'];
     }
 
     /**
      * @inheritdoc
      */
-    public function stickyAttributes()
-    {
+    public function stickyAttributes() {
         return array_merge(parent::stickyAttributes(), ['ns', 'db', 'baseClass', 'generateRelations', 'generateLabelsFromComments']);
     }
 
     /**
      * @inheritdoc
      */
-    public function generate()
-    {
+    public function generate() {
         $files = [];
         $relations = $this->generateRelations();
         $db = $this->getDbConnection();
@@ -174,8 +166,7 @@ class Generator extends \yii\gii\Generator
                 'relations' => isset($relations[$className]) ? $relations[$className] : [],
             ];
             $files[] = new CodeFile(
-                Yii::getAlias('@' . str_replace('\\', '/', $this->ns)) . '/' . $className . '.php',
-                $this->render('model.php', $params)
+                    Yii::getAlias('@' . str_replace('\\', '/', $this->ns)) . '/' . $className . '.php', $this->render('model.php', $params)
             );
         }
 
@@ -187,8 +178,7 @@ class Generator extends \yii\gii\Generator
      * @param \yii\db\TableSchema $table the table schema
      * @return array the generated attribute labels (name => label)
      */
-    public function generateLabels($table)
-    {
+    public function generateLabels($table) {
         $labels = [];
         foreach ($table->columns as $column) {
             if ($this->generateLabelsFromComments && !empty($column->comment)) {
@@ -212,16 +202,21 @@ class Generator extends \yii\gii\Generator
      * @param \yii\db\TableSchema $table the table schema
      * @return array the generated validation rules
      */
-    public function generateRules($table)
-    {
+    public function generateRules($table) {
+        $images = ['image', 'avatar'];
         $types = [];
         $lengths = [];
+        $extensions = [];
         foreach ($table->columns as $column) {
             if ($column->autoIncrement) {
                 continue;
             }
             if (!$column->allowNull && $column->defaultValue === null) {
                 $types['required'][] = $column->name;
+            }
+            if (in_array($column->name, $images)) {
+                $extensions[] = $column->name;
+                //$types['file'][]=$column->name;
             }
             switch ($column->type) {
                 case Schema::TYPE_SMALLINT:
@@ -258,6 +253,9 @@ class Generator extends \yii\gii\Generator
         foreach ($lengths as $length => $columns) {
             $rules[] = "[['" . implode("', '", $columns) . "'], 'string', 'max' => $length]";
         }
+        foreach ($extensions as $k => $v) {
+             $rules[] = "[['$v'], 'file', 'extensions' => 'jpg,png,gif'],";
+        }
 
         // Unique indexes rules
         try {
@@ -288,8 +286,7 @@ class Generator extends \yii\gii\Generator
     /**
      * @return array the generated relation declarations
      */
-    protected function generateRelations()
-    {
+    protected function generateRelations() {
         if (!$this->generateRelations) {
             return [];
         }
@@ -377,8 +374,7 @@ class Generator extends \yii\gii\Generator
      * @param array $refs reference constraint
      * @return string the generated link parameter.
      */
-    protected function generateRelationLink($refs)
-    {
+    protected function generateRelationLink($refs) {
         $pairs = [];
         foreach ($refs as $a => $b) {
             $pairs[] = "'$a' => '$b'";
@@ -395,8 +391,7 @@ class Generator extends \yii\gii\Generator
      * @return array|boolean the relevant foreign key constraint information if the table is a junction table,
      * or false if the table is not a junction table.
      */
-    protected function checkPivotTable($table)
-    {
+    protected function checkPivotTable($table) {
         $pk = $table->primaryKey;
         if (count($pk) !== 2) {
             return false;
@@ -427,8 +422,7 @@ class Generator extends \yii\gii\Generator
      * @param boolean $multiple whether this is a has-many relation
      * @return string the relation name
      */
-    protected function generateRelationName($relations, $className, $table, $key, $multiple)
-    {
+    protected function generateRelationName($relations, $className, $table, $key, $multiple) {
         if (!empty($key) && substr_compare($key, 'id', -2, 2, true) === 0 && strcasecmp($key, 'id')) {
             $key = rtrim(substr($key, 0, -2), '_');
         }
@@ -450,8 +444,7 @@ class Generator extends \yii\gii\Generator
     /**
      * Validates the [[db]] attribute.
      */
-    public function validateDb()
-    {
+    public function validateDb() {
         if (!Yii::$app->has($this->db)) {
             $this->addError('db', 'There is no application component named "db".');
         } elseif (!Yii::$app->get($this->db) instanceof Connection) {
@@ -462,8 +455,7 @@ class Generator extends \yii\gii\Generator
     /**
      * Validates the [[ns]] attribute.
      */
-    public function validateNamespace()
-    {
+    public function validateNamespace() {
         $this->ns = ltrim($this->ns, '\\');
         $path = Yii::getAlias('@' . str_replace('\\', '/', $this->ns), false);
         if ($path === false) {
@@ -474,8 +466,7 @@ class Generator extends \yii\gii\Generator
     /**
      * Validates the [[modelClass]] attribute.
      */
-    public function validateModelClass()
-    {
+    public function validateModelClass() {
         if ($this->isReservedKeyword($this->modelClass)) {
             $this->addError('modelClass', 'Class name cannot be a reserved PHP keyword.');
         }
@@ -487,8 +478,7 @@ class Generator extends \yii\gii\Generator
     /**
      * Validates the [[tableName]] attribute.
      */
-    public function validateTableName()
-    {
+    public function validateTableName() {
         if (strpos($this->tableName, '*') !== false && substr_compare($this->tableName, '*', -1, 1)) {
             $this->addError('tableName', 'Asterisk is only allowed as the last character.');
 
@@ -514,8 +504,7 @@ class Generator extends \yii\gii\Generator
     /**
      * @return array the table names that match the pattern specified by [[tableName]].
      */
-    protected function getTableNames()
-    {
+    protected function getTableNames() {
         if ($this->tableNames !== null) {
             return $this->tableNames;
         }
@@ -552,8 +541,7 @@ class Generator extends \yii\gii\Generator
      * @param string $tableName the table name (which may contain schema prefix)
      * @return string the generated table name
      */
-    public function generateTableName($tableName)
-    {
+    public function generateTableName($tableName) {
         if (!$this->useTablePrefix) {
             return $tableName;
         }
@@ -572,8 +560,7 @@ class Generator extends \yii\gii\Generator
      * @param string $tableName the table name (which may contain schema prefix)
      * @return string the generated class name
      */
-    protected function generateClassName($tableName)
-    {
+    protected function generateClassName($tableName) {
         if (isset($this->classNames[$tableName])) {
             return $this->classNames[$tableName];
         }
@@ -607,8 +594,7 @@ class Generator extends \yii\gii\Generator
     /**
      * @return Connection the DB connection as specified by [[db]].
      */
-    protected function getDbConnection()
-    {
+    protected function getDbConnection() {
         return Yii::$app->get($this->db, false);
     }
 
@@ -618,8 +604,7 @@ class Generator extends \yii\gii\Generator
      * @param array $columns columns to check for autoIncrement property
      * @return boolean whether any of the specified columns is auto incremental.
      */
-    protected function isColumnAutoIncremental($table, $columns)
-    {
+    protected function isColumnAutoIncremental($table, $columns) {
         foreach ($columns as $column) {
             if (isset($table->columns[$column]) && $table->columns[$column]->autoIncrement) {
                 return true;
