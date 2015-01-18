@@ -86,7 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<?php echo "<php \n";?>
+<?php echo "<?php \n";?>
 if(Yii::$app->session->get($log)){
 $this->registerJs('$(document).ready(function(){ $.ajax({
         type:"POST",
