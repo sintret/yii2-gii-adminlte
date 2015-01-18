@@ -278,7 +278,7 @@ if (count($pks) === 1) {
                 $notification->save();
             }
         }
-        $route = '<?= strtolower($modelClass) ?>/log-parsing';
+        $route = '<?= strtolower($modelClass) ?>/parsing-log';
 
         return $this->render('parsing', ['model' => $model, 'array' => $array,'log'=>$log,'route'=>$route]);
     }
