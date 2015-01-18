@@ -68,6 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php echo "?>\n";?>
                 </div>
             </div>
+            <div class="notifications"></div>
             
             <?php echo "<?php\n";?>
             ActiveForm::end();
@@ -84,3 +85,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     </div>
 </div>
+
+<?php echo "<php \n";?>
+if(Yii::$app->session->get($log)){
+$this->registerJs('$(document).ready(function(){ $.ajax({
+        type:"POST",
+        url:"' . Yii::$app->urlManager->createUrl(['<?= $route?>','id'=>Yii::$app->session->get($log)]) . '",
+        beforeSend:function(){ $("#notifications").html("'.yii\helpers\Url::to("@web/img/loadingAnimation.gif").'");},
+        success:function(html){
+            $(".notifications").html(html);
+        }
+    });});');
+ } 
+ Yii::$app->session->set($log,NULL);
+<?php echo "?> \n";?>

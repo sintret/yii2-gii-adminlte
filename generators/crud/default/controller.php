@@ -41,6 +41,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use app\models\LogUpload;
+use sintret\gii\components\Util;
+
 
 /**
  * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
@@ -55,7 +57,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index','view','sample'],
+                        'actions' => ['index','view','sample','parsing-log'],
                         'roles' => ['viewer']
                     ],
                     [
@@ -203,14 +205,14 @@ if (count($pks) === 1) {
     public function actionSample() {
 
         //$objPHPExcel = new \PHPExcel();
-        $template = Yii::$app->util->templateExcel();
+        $template = Util::templateExcel();
         $model = new <?= $modelClass ?>;
         $date = date('YmdHis');
         $name = $date.<?= $modelClass ?>;
         //$attributes = $model->attributeLabels();
         $models = <?= $modelClass ?>::find()->all();
-        $excelChar = Yii::$app->util->excelChar();
-        $not = Yii::$app->util->excelNot();
+        $excelChar = Util::excelChar();
+        $not = Util::excelNot();
         
         foreach ($model->attributeLabels() as $k=>$v){
             if(!in_array($k, $not)){
@@ -236,18 +238,17 @@ if (count($pks) === 1) {
                 $filename = Yii::getAlias(LogUpload::$imagePath) . $date . '.' . $model->fileori->extension;
                 $model->fileori->saveAs($filename);
             }
-            $params = Yii::$app->util->excelParsing(Yii::getAlias($filename));
+            $params = Util::excelParsing(Yii::getAlias($filename));
             $model->params = \yii\helpers\Json::encode($params);
-
-            $top = ['userUpdate', 'userCreate', 'createDate'];
-            $now = date('Y-m-d H:i:s');
-            $userId = Yii::$app->user->identity->id;
+            $model->title = '<?= $modelClass ?>';
+            $model->fileori = $fileOri;
+            $model->filename = $filename;
 
             $num = 0;
             $fields = [];
             $values = [];
             if ($params)
-                foreach ($params as $v) {
+                foreach ($params as $k => $v) {
                     foreach ($v as $key => $val) {
                         if ($num == 0) {
                             $fields[$key] = $val;
@@ -255,29 +256,82 @@ if (count($pks) === 1) {
                         }
 
                         if ($num >= 3) {
-                            $values[$num] = $v;
-                            if($key==8){
-                                $values[$num] = $v;
-                                $values[$num][$max+1]=$userId;
-                                $values[$num][$max+2]=$userId;
-                                $values[$num][$max+3]=$now;
-                            }
+                            $values[$num][$fields[$key]] = $val;
                         }
                     }
                     $num++;
                 }
-            $connection = Yii::$app->db;
-            $connection->createCommand()->batchInsert('<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>', array_merge($fields, $top), $values)->execute();
-
-            $model->title = '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>';
-            $model->fileori = $fileOri;
-            $model->filename = $filename;
-
+            if (in_array('id', $fields)) {
+                $model->type = LogUpload::TYPE_UPDATE;
+            } else {
+                $model->type = LogUpload::TYPE_INSERT;
+            }
+            $model->values = \yii\helpers\Json::encode($values);
             if ($model->save()) {
-                Yii::$app->session->setFlash('success', 'Well done! successfully to Parsing data, see log on log upload menu!  ');
+                $log = 'log_<?= $modelClass ?>'. Yii::$app->user->id;
+                Yii::$app->session->setFlash('success', 'Well done! successfully to Parsing data, see log on log upload menu! Please Waiting for processing indicator if available...  ');
+                Yii::$app->session->set($log, $model->id);
+                $notification = new \app\models\Notification;
+                $notification->title = 'parsing <?= $modelClass ?>';
+                $notification->message = Yii::$app->user->identity->username . ' parsing <?= $modelClass ?> ';
+                $notification->params = \yii\helpers\Json::encode(['model' => '<?= $modelClass ?>', 'id' => $model->id]);
+                $notification->save();
             }
         }
+        $route = '<?= strtolower($modelClass) ?>/log-parsing';
 
-        return $this->render('parsing', ['model' => $model]);
+        return $this->render('parsing', ['model' => $model, 'array' => $array,'log'=>$log,'route'=>$route]);
+    }
+    
+    public function actionParsingLog($id) {
+        $mod = LogUpload::findOne($id);
+        $type = $mod->type;
+        $params = \yii\helpers\Json::decode($mod->params);
+        $values = \yii\helpers\Json::decode($mod->values);
+        $modelAttribute = new <?= $modelClass ?>;
+        $not = Util::excelNot();
+        foreach ($modelAttribute->attributeLabels() as $k=>$v){
+            if(!in_array($k, $not)){
+                $attr[]=$v;
+            }
+        }
+            
+            foreach ($values as $value) {
+                if ($type == LogUpload::TYPE_INSERT)
+                    $model = new <?= $modelClass ?>;
+                else
+                    $model = <?= $modelClass ?>::findOne($value['id']);
+
+                foreach ($attr as $at) {
+                    if (isset($value[$at])) {
+                        if ($value[$at]) {
+                            $model->$at = trim($value[$at]);
+                        }
+                    }
+                }
+                $e = 0;
+                if ($model->save()) {
+                    $model = NULL;
+                    $pos = NULL;
+                } else {
+                    $error[] = \yii\helpers\Json::encode($model->getErrors());
+                    $e = 1;
+                }
+            }
+
+        if ($error) {
+            foreach ($error as $err) {
+                if ($err) {
+                    $er[] = $err;
+                    $e+=1;
+                }
+            }
+            if ($e) {
+                $mod->warning = \yii\helpers\Json::encode($er);
+                $mod->save();
+                echo '<pre>';
+                print_r($er);
+            }
+        }
     }
 }
