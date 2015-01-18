@@ -32,31 +32,92 @@ use kartik\widgets\SwitchInput;
 
     <?= "<?php " ?>
     $form = ActiveForm::begin([
-                'type' => ActiveForm::TYPE_HORIZONTAL,
-                'options' => ['enctype' => 'multipart/form-data']   // important, needed for file upload
+    'type' => ActiveForm::TYPE_HORIZONTAL,
+    'options' => ['enctype' => 'multipart/form-data']   // important, needed for file upload
     ]);?>
-        
+
+
+        <?php
+        $fields = [];
+        $num = 1;
+        $count = $generator->getColumnNames();
+        $exception = ['userUpdate','userCreate','updateDate','createDate'];
+        $result = array_diff($attribute, $generators->exceptionsArray);
+        foreach ($generator->getColumnNames() as $attribute) {
+            $column = $generator->getTableSchema()->columns[$attribute];
+            $type = $generator->getTableSchema()->columns[$attribute]->type;
+                   
+//            echo $type;
+//            echo '<pre>';
+//            print_r($column);
+//            echo '<hr><pre>';
+//            print_r($generator->getTableSchema());
+//            echo '<pre>';
+//            print_r($generator);
+//            echo '<pre>';
+//            print_r($attribute);
+//            exit(0);
+            if (in_array($attribute, $safeAttributes)) {
+                if ($num % 2 == 0){
+                    $l ='left';
+                } else {
+                    $l ='right';
+                }
+
+                if ($attribute == 'image') {
+                    $fields[$l][] =  '<?php
+                    if ($model->image) {
+                         $plugin = [
+                             "initialPreview" => [kartik\helpers\Html::img($model->thumbnailTrue, ["class" => "file-preview-image"])]
+                         ];
+                     }
+                    echo $form->field($model, "image")->widget(FileInput::classname(), [
+                        "options" => ["accept" => "image/*"],
+                        "pluginOptions" => $plugin
+                    ]);
+                    ?>';
+                } elseif ($type=='date'){
+                    $fields[$l][] = '<?=
+            $form->field($model, "release")->widget(DatePicker::classname(), [
+                "options" => ["placeholder" => "Enter date ..."],
+                "pluginOptions" => [
+                    "autoclose" => true,
+                    "format" => "yyyy-mm-dd"
+                ]
+            ])
+            ?>';
+                } else {
+                    if(!in_array($attribute, $exception))
+                        $fields[$l][] = "\n            <?= " . $generator->generateActiveField($attribute) . " ?>\n";
+                }
+                $num++;
+            }
+
+        }
+        ?>
     <div class="row">
         <div class="col-md-6">
-            
+        <?php foreach ($fields['left'] as $val) {
+           echo $val;
+        }
+        ?>
         </div>
+
         <div class="col-md-6">
-            
+        <?php foreach ($fields['right'] as $val) {
+           echo $val;
+        }
+        ?>
         </div>
-        
+
     </div>
 
-<?php foreach ($generator->getColumnNames() as $attribute) {
-    if (in_array($attribute, $safeAttributes)) {
-        echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
-    }
-} ?>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Create') ?> : <?= $generator->generateString('Update') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= "        <?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Create') ?> : <?= $generator->generateString('Update') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
     </div>
 
-    <?= "<?php " ?>ActiveForm::end(); ?>
+        <?= "<?php " ?>ActiveForm::end(); ?>
 
 </div>
