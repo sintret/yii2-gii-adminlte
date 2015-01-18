@@ -22,7 +22,23 @@
         }
     ],
     "require": {
-        "php":">=5.3.0"
+        "php": ">=5.3.0",
+        "phpoffice/phpexcel": "dev-develop",
+        "yiisoft/yii2-imagine": "*",
+        "kartik-v/yii2-widgets": "dev-master",
+        "kartik-v/yii2-grid": "@dev",
+        "kartik-v/yii2-krajee-base": "@dev",
+        "mdmsoft/yii2-admin": "~1.0",
+        "kartik-v/yii2-mpdf": "@dev",
+        "kartik-v/yii2-checkbox-x": "*",
+        "kartik-v/yii2-dynagrid": "*",
+        "kartik-v/yii2-widget-datepicker": "@dev",
+        "kartik-v/yii2-tabs-x": "*",
+        "kartik-v/bootstrap-fileinput": "dev-master",
+        "kartik-v/yii2-checkbox-x": "*",
+        "kartik-v/yii2-detail-view": "*",
+        "kartik-v/yii2-password": "dev-master",
+        "sendgrid/sendgrid": "2.1.1"
     },
     "minimum-stability": "dev",
     "autoload": {
