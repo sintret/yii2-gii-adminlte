@@ -41,9 +41,11 @@ use kartik\widgets\SwitchInput;
         $fields = [];
         $num = 1;
         $count = $generator->getColumnNames();
+        $exception = ['userUpdate','createDate','UpdateDate','userCreate'];
         foreach ($generator->getColumnNames() as $attribute) {
             $column = $generator->getTableSchema()->columns[$attribute];
             $type = $generator->getTableSchema()->columns[$attribute]->type;
+                   
             if (in_array($attribute, $safeAttributes)) {
                 if ($num % 2 == 0){
                     $l ='left';
@@ -84,14 +86,14 @@ use kartik\widgets\SwitchInput;
         ?>
     <div class="row">
         <div class="col-md-6">
-        <?php foreach ($fields['left'] as $val) {
+        <?php if($fields['left']) foreach ($fields['left'] as $val) {
            echo $val;
         }
         ?>
         </div>
 
         <div class="col-md-6">
-        <?php foreach ($fields['right'] as $val) {
+        <?php if($fields['right'])  foreach ($fields['right'] as $val) {
            echo $val;
         }
         ?>
@@ -108,3 +110,4 @@ use kartik\widgets\SwitchInput;
         <?= "<?php " ?>ActiveForm::end(); ?>
 
 </div>
+
