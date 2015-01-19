@@ -40,7 +40,7 @@ use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
-use app\models\LogUpload;
+use sintret\gii\LogUpload;
 use sintret\gii\components\Util;
 
 
@@ -292,7 +292,7 @@ if (count($pks) === 1) {
         $not = Util::excelNot();
         foreach ($modelAttribute->attributeLabels() as $k=>$v){
             if(!in_array($k, $not)){
-                $attr[]=$v;
+                $attr[] = $k;
             }
         }
             

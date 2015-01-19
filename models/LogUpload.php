@@ -46,7 +46,7 @@ class LogUpload extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['fileori'], 'required'],
-            [['userCreate', 'userUpdate', 'type'], 'integer'],
+            [['userId', 'type'], 'integer'],
             [['updateDate', 'createDate', 'params', 'warning', 'values'], 'safe'],
             [['title'], 'string', 'max' => 128],
             [['filename'], 'string', 'max' => 255],
@@ -91,7 +91,10 @@ class LogUpload extends \yii\db\ActiveRecord {
     }
 
     public function getUser() {
-        return $this->hasOne($this->getUserClassName(), ['id' => 'userId']);
+        if ($this->getUserClassName())
+            return $this->hasOne($this->getUserClassName(), ['id' => 'userId']);
+        else
+            return null;
     }
 
     public function getFilenameLabel() {
