@@ -100,7 +100,7 @@ class Notification extends \yii\db\ActiveRecord {
                                     <ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">';
         if ($models)
             foreach ($models as $model) {
-                $return .='<li><a href="#"><i class="ion ion-ios7-people info"></i>' . $model->message . ' <small style="color:green">' . $model->timeago . '</small></a></li>';
+                $return .='<li><a href="#">'.self::icon($model->params) . ' '. $model->message . ' <small style="color:green">' . $model->timeago . '</small></a></li>';
             }
         $return .='</ul><div class="slimScrollBar" style="width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 0px; z-index: 99; right: 1px; height: 156.862745098039px; background: rgb(0, 0, 0);"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 0px; opacity: 0.2; z-index: 90; right: 1px; background: rgb(51, 51, 51);"></div></div>';
         $return .=' <li class="footer"><a href="' . \yii\helpers\Url::to(["/notification/index"]) . '">View all</a></li></ul></li>';
@@ -111,6 +111,23 @@ class Notification extends \yii\db\ActiveRecord {
     public function getTimeago() {
         if ($this->createDate)
             return Enum::timeElapsed($this->createDate);
+    }
+
+    public static function icon($json) {
+        $model = '';
+        $return = '';
+        if ($json)
+            $params = json_decode($json, true);
+        if ($params)
+            $model = $params['model'];
+
+        if ($model == 'User') {
+            $return = '<i class="fa fa-users"></i>';
+        } else {
+            $return = '<i class="fa fa-upload"></i>';
+        }
+
+        return $return;
     }
 
 }
