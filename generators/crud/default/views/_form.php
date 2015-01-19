@@ -41,7 +41,7 @@ use kartik\widgets\SwitchInput;
         $fields = [];
         $num = 1;
         $count = $generator->getColumnNames();
-        $exception = ['userUpdate','createDate','UpdateDate','userCreate'];
+        $exception = ['userUpdate','createDate','updateDate','userCreate'];
         foreach ($generator->getColumnNames() as $attribute) {
             $column = $generator->getTableSchema()->columns[$attribute];
             $type = $generator->getTableSchema()->columns[$attribute]->type;
