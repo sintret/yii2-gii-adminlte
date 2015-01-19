@@ -58,6 +58,19 @@ class Notification extends \yii\db\ActiveRecord {
         ];
     }
 
+    public function getUserClassName() {
+        $userClass = Yii::$app->getUser()->identityClass;
+        if ($this->userModel)
+            return $this->userModel;
+        else
+            return $userClass;
+    }
+
+    public function getUser() {
+        if ($this->getUserClassName())
+            return $this->hasOne($this->getUserClassName(), ['id' => 'userId']);
+    }
+
     public function beforeSave($insert) {
         if ($this->isNewRecord) {
             $this->createDate = date('Y-m-d H:i:s');

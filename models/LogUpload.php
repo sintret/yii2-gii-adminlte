@@ -26,7 +26,6 @@ class LogUpload extends \yii\db\ActiveRecord {
     const TYPE_DELETE = 3;
 
     public static $type = [1 => 'Insert', 2 => 'Update', 3 => 'Delete'];
-    
     // user model for relation with table user
     public $userModel;
 
@@ -83,11 +82,17 @@ class LogUpload extends \yii\db\ActiveRecord {
         }
     }
 
-    public function getUser() {
-        if (isset($this->userModel))
-            return $this->hasOne($this->userModel, ['id' => 'userId']);
+    public function getUserClassName() {
+        $userClass = Yii::$app->getUser()->identityClass;
+        if ($this->userModel)
+            return $this->userModel;
+        else
+            return $userClass;
     }
 
+    public function getUser() {
+        return $this->hasOne($this->getUserClassName(), ['id' => 'userId']);
+    }
 
     public function getFilenameLabel() {
         if ($this->filename) {
