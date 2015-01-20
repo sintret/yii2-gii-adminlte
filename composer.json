@@ -34,9 +34,7 @@
         "kartik-v/yii2-widget-datepicker": "*",
         "kartik-v/yii2-tabs-x": "*",
         "kartik-v/bootstrap-fileinput": "*",
-        "kartik-v/yii2-checkbox-x": "*",
-        "sintret/yii2-chat-adminlte": "*",
-        "sintret/yii2-todolist": "*"
+        "kartik-v/yii2-checkbox-x": "*"
     },
     "minimum-stability": "dev",
     "autoload": {
