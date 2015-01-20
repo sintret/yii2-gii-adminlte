@@ -35,8 +35,8 @@
         "kartik-v/yii2-tabs-x": "*",
         "kartik-v/bootstrap-fileinput": "*",
         "kartik-v/yii2-checkbox-x": "*",
-        "sintret/yii2-chat-adminlte": "*",
-        "sintret/yii2-todolist": "*"
+        "sintret/yii2-chat-adminlte": "dev-master",
+        "sintret/yii2-todolist": "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {
