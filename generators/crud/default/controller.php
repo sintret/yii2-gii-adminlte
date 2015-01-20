@@ -36,6 +36,20 @@ use <?= ltrim($generator->searchModelClass, '\\') . (isset($searchModelAlias) ? 
 <?php else: ?>
 use yii\data\ActiveDataProvider;
 <?php endif; ?>
+<?php
+$num=0;
+foreach ($generator->getColumnNames() as $attribute) {
+   $attr[]=$attribute; 
+   if($attribute == 'image'){
+       $num=1;
+   }
+}
+if($num){
+    $loadfile = 'loadWithFiles';
+} else {
+    $loadfile = 'load';
+}
+?>
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -49,6 +63,8 @@ use sintret\gii\components\Util;
  */
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
+
+    public $attributeClass = []; 
     public function behaviors()
     {
         return [
@@ -131,7 +147,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $model = new <?= $modelClass ?>();
 
-        if ($model->loadWithFiles(Yii::$app->request->post()) && $model->save()) {
+        if ($model-><?=$loadfile;?>(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Well done! successfully to save data!  ');
             return $this->redirect(['view', <?= $urlParams ?>]);
         } else {
@@ -151,8 +167,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $model = $this->findModel(<?= $actionParams ?>);
 
-        if ($model->loadWithFiles(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Well done! successfully to Update data!  ');
+        if ($model-><?=$loadfile;?>(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Well done! successfully to update data!  ');
             return $this->redirect(['view', <?= $urlParams ?>]);
         } else {
             return $this->render('update', [
