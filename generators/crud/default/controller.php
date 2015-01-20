@@ -64,7 +64,6 @@ use sintret\gii\components\Util;
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
 
-    public $attributeClass = []; 
     public function behaviors()
     {
         return [
