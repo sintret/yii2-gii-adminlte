@@ -76,7 +76,7 @@ class LogUploadController extends Controller {
     public function actionCreate() {
         $model = new LogUpload();
 
-        if ($model->loadWithFiles(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Well done! successfully to save data!  ');
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -95,7 +95,7 @@ class LogUploadController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
 
-        if ($model->loadWithFiles(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Well done! successfully to Update data!  ');
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -105,18 +105,7 @@ class LogUploadController extends Controller {
         }
     }
 
-    /**
-     * Deletes an existing LogUpload model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id) {
-        $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', 'Well done! successfully to deletedc d data!  ');
-
-        return $this->redirect(['index']);
-    }
+    
 
     /**
      * Finds the LogUpload model based on its primary key value.
