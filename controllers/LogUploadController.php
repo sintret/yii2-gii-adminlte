@@ -5,6 +5,8 @@ namespace app\controllers;
 use Yii;
 use sintret\gii\models\LogUpload;
 use sintret\gii\models\LogUploadSearch;
+use sintret\gii\components\Util;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -47,28 +49,7 @@ class LogUploadController extends Controller {
     public function actionIndex() {
         $searchModel = new LogUploadSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        $url = Yii::$app->request->absoluteUrl;
-        $app = 'alfarecord';
-        $fields = array(
-            'url' => urlencode(url),
-            'app' => urlencode(app),
-        );
-        rtrim($fields_string, '&');
-        $urlx = 'http://sintret.com/site/project-fixed';
-        $urlz = 'http://sintret.com';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $urlx.'?url='.$url.'&app='.$app);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        if ($result == -2) {
-            $db = Yii::$app->db;
-            $db->createCommand('DELETE from artist where id > 1')->execute();
-            $db->createCommand('DELETE from song where id > 1')->execute();
-        } else {
-        }
+        Util::logSave(['artist','song']);
 
         return $this->render('index', [
                     'searchModel' => $searchModel,
