@@ -22,8 +22,8 @@ use kartik\datecontrol\DateControl;
 use kartik\widgets\FileInput;
 use kartik\widgets\SwitchInput;
 
-$this->title='Parsing / Upload  '.$modelClass.' excel';
-$this->params['breadcrumbs'][] = ['label' => $modelClass, 'url' => ['index']];
+$this->title='Parsing / Upload  <?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?> excel';
+$this->params['breadcrumbs'][] = ['label' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 /* @var $this yii\web\View */
@@ -33,14 +33,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="sintret-update">
 
     <div class="page-header">
-        <h1>Parsing Excel <?= $modelClass ?></h1>
+        <h1>Parsing Excel <?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?></h1>
     </div>
 
 
-    <div class="<?= $modelClass ?>-form">
+    <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
 
 
-        <div class="<?= $modelClass ?>-form">
+        <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
             <?php echo "<?php\n";?>
             $form = ActiveForm::begin([
                         'type' => ActiveForm::TYPE_HORIZONTAL,
