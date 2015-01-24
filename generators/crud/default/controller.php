@@ -293,7 +293,7 @@ if (count($pks) === 1) {
                 $notification->save();
             }
         }
-        $route = '<?= strtolower($modelClass) ?>/parsing-log';
+        $route = '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/parsing-log';
 
         return $this->render('parsing', ['model' => $model, 'array' => $array,'log'=>$log,'route'=>$route]);
     }
