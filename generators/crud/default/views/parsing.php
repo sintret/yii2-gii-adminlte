@@ -22,8 +22,8 @@ use kartik\datecontrol\DateControl;
 use kartik\widgets\FileInput;
 use kartik\widgets\SwitchInput;
 
-$this->title='Parsing / Upload  <?= $modelClass ?> excel';
-$this->params['breadcrumbs'][] = ['label' => ' <?= $modelClass ?>', 'url' => ['index']];
+$this->title='Parsing / Upload  '.$modelClass.' excel';
+$this->params['breadcrumbs'][] = ['label' => $modelClass, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 /* @var $this yii\web\View */
