@@ -22,6 +22,7 @@ use kartik\builder\Form;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\FileInput;
 use kartik\widgets\SwitchInput;
+use kartik\widgets\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
@@ -67,7 +68,7 @@ use kartik\widgets\SwitchInput;
                     ?>';
                 } elseif ($type=='date'){
                     $fields[$l][] = '<?=
-            $form->field($model, "release")->widget(DatePicker::classname(), [
+            $form->field($model, "'.$attribute.'")->widget(DatePicker::classname(), [
                 "options" => ["placeholder" => "Enter date ..."],
                 "pluginOptions" => [
                     "autoclose" => true,
