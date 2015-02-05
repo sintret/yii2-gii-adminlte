@@ -339,4 +339,37 @@ if (count($pks) === 1) {
             }
         }
     }
+    
+    public function actionExcel(){
+        $model = new <?= $modelClass ?>;
+        $date = date('YmdHis');
+        $name = $date.<?= $modelClass ?>;
+        //$attributes = $model->attributeLabels();
+        $models = <?= $modelClass ?>::find()->all();
+        $excelChar = Util::excelChar();
+        $not = Util::excelNot();
+        
+        foreach ($model->attributeLabels() as $k=>$v){
+            if(!in_array($k, $not)){
+                $attributes[$k]=$v;
+            }
+        }
+
+        $searchModel = new <?= $modelClass ?>Search();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $models = $dataProvider->getModels();
+        $objReader = \PHPExcel_IOFactory::createReader('Excel5');
+        $objPHPExcel = $objReader->load(Yii::getAlias(Util::templateExcel()));
+        $excelChar = Util::excelChar();
+        return $this->render('_excel', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                    'attributes' => $attributes,
+                    'models' => $models,
+                    'objReader' => $objReader,
+                    'objPHPExcel' => $objPHPExcel,
+                    'excelChar' => $excelChar
+        ]);
+    }
 }
