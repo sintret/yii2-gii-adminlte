@@ -13,6 +13,7 @@ use Yii;
  * @property string $fileori
  * @property string $params
  * @property string $warning
+ * @property string $keys
  * @property string $values
  * @property integer $type
  * @property integer $userId
@@ -47,7 +48,7 @@ class LogUpload extends \yii\db\ActiveRecord {
         return [
             [['fileori'], 'required'],
             [['userId', 'type'], 'integer'],
-            [['updateDate', 'createDate', 'params', 'warning', 'values'], 'safe'],
+            [['updateDate', 'createDate', 'params', 'warning', 'values', 'keys'], 'safe'],
             [['title'], 'string', 'max' => 128],
             [['filename'], 'string', 'max' => 255],
             [['fileori'], 'file'],
@@ -65,6 +66,7 @@ class LogUpload extends \yii\db\ActiveRecord {
             'fileori' => 'File Excel (*.xls)',
             'params' => 'Params',
             'warning' => 'Warning',
+            'keys' => 'Keys',
             'values' => 'Values',
             'userCreate' => 'User Create',
             'userUpdate' => 'User Update',
