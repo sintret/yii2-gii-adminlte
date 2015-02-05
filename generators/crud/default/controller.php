@@ -72,7 +72,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index','view','sample','parsing-log'],
+                        'actions' => ['index','view','sample','parsing-log','excel'],
                         'roles' => ['viewer']
                     ],
                     [
@@ -255,6 +255,7 @@ if (count($pks) === 1) {
             }
             $params = Util::excelParsing(Yii::getAlias($filename));
             $model->params = \yii\helpers\Json::encode($params);
+            $model->keys = \yii\helpers\Json::encode($params[0]);
             $model->title = 'parsing <?= $modelClass ?>';
             $model->fileori = $fileOri;
             $model->filename = $filename;
@@ -301,28 +302,17 @@ if (count($pks) === 1) {
     public function actionParsingLog($id) {
         $mod = LogUpload::findOne($id);
         $type = $mod->type;
-        $params = \yii\helpers\Json::decode($mod->params);
+        $keys = \yii\helpers\Json::decode($mod->keys);
         $values = \yii\helpers\Json::decode($mod->values);
-        $modelAttribute = new <?= $modelClass ?>;
-        $not = Util::excelNot();
-        foreach ($modelAttribute->attributeLabels() as $k=>$v){
-            if(!in_array($k, $not)){
-                $attr[] = $k;
-            }
-        }
-            
+        
             foreach ($values as $value) {
                 if ($type == LogUpload::TYPE_INSERT)
                     $model = new <?= $modelClass ?>;
                 else
                     $model = <?= $modelClass ?>::findOne($value['id']);
 
-                foreach ($attr as $at) {
-                    if (isset($value[$at])) {
-                        if ($value[$at]) {
-                            $model->$at = trim($value[$at]);
-                        }
-                    }
+                foreach ($keys as $at) {
+                    $model->$at = trim($value[$at]);
                 }
                 $e = 0;
                 if ($model->save()) {
