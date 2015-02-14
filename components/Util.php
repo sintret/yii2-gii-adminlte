@@ -20,6 +20,16 @@ class Util extends Component {
 
     const PUBLISH = 1;
     const UNPUBLISH = 0;
+    
+    public static $months = [1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    public static function getYears() {
+        $return = [];
+        for ($i = date('Y'); $i > 2000; $i--) {
+        $return[$i] = $i;
+        }
+        return $return;
+    }
 
     public static function publish() {
         return ['Unpublish', 'Publish'];
