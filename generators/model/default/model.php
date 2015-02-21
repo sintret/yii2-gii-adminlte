@@ -18,7 +18,7 @@ echo "<?php\n";
 namespace <?= $generator->ns ?>;
 
 use Yii;
-use app\models\User;
+use <?= $generator->ns ?>\User;
 
 
 /**
