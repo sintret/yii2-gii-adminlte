@@ -196,7 +196,6 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 
     DynaGrid::end();
 <?= "?> " ?>
-  
 </div>
 <?php echo "<?php \n";?>
 $this->registerJs('$(document).on("click", "#backupExcel", function(){
