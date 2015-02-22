@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ['content' =>
             Html::a('<i class="glyphicon glyphicon-plus"></i>', ['<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/create'], ['type' => 'button', 'title' => 'Add ' . $this->title, 'class' => 'btn btn-success']) . ' ' .
             Html::a('<i class="fa fa-file-excel-o"></i>', ['<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/parsing'], ['type' => 'button', 'title' => 'Parsing Excel ' . $this->title, 'class' => 'btn btn-danger']) . ' ' .
+            Html::button('<i class="fa fa-download"></i>', ['type' => 'button', 'title' => 'Excel Backup ' . $this->title, 'class' => 'btn btn-default','id'=>'backupExcel']) . ' ' .
             Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Reset Grid']). ' '
 
             
@@ -197,3 +198,8 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 <?= "?> " ?>
   
 </div>
+<?php echo "<?php \n";?>
+$this->registerJs('$(document).on("click", "#backupExcel", function(){
+    var myUrl = window.location.href;
+    location.href=myUrl.replace(/index/gi, "excel"); ;
+})');?>
