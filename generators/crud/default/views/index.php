@@ -8,6 +8,8 @@ use yii\helpers\StringHelper;
 
 $urlParams = $generator->generateUrlParams();
 $nameAttribute = $generator->getNameAttribute();
+$cl = $generator->modelClass;
+$explode = explode("\\", $cl);
 
 echo "<?php\n";
 ?>
@@ -15,7 +17,7 @@ echo "<?php\n";
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\dynagrid\DynaGrid;
-use app\models\User;
+use <?= $explode[0];?>\<?= $explode[1];?>\User;
 /* @var $this yii\web\View */
 <?= !empty($generator->searchModelClass) ? "/* @var \$searchModel " . ltrim($generator->searchModelClass, '\\') . " */\n" : '' ?>
 /* @var $dataProvider yii\data\ActiveDataProvider */
