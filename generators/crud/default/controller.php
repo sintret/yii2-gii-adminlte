@@ -72,12 +72,17 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index','view','sample','parsing-log'],
+                        'actions' => ['index','view','sample','parsing-log','excel'],
                         'roles' => ['viewer']
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['update','create','parsing'],
+                        'actions' => ['create','parsing'],
+                        'roles' => ['author']
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
                         'roles' => ['editor']
                     ],
                     [
@@ -348,5 +353,31 @@ if (count($pks) === 1) {
                 print_r($er);
             }
         }
+    }
+
+    public function actionExcel() {
+        $searchModel = new <?= $modelClass ?>Search;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $modelAttribute = new <?= $modelClass ?>;
+        $not = Util::excelNot();
+        foreach ($modelAttribute->attributeLabels() as $k=>$v){
+            if(!in_array($k, $not)){
+                $attributes[$k] = $v;
+            }
+        }
+
+        $models = $dataProvider->getModels();
+        $objReader = \PHPExcel_IOFactory::createReader('Excel5');
+        $objPHPExcel = $objReader->load(Yii::getAlias(Util::templateExcel()));
+        $excelChar = Util::excelChar();
+        return $this->render('_excel', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                    'attributes' => $attributes,
+                    'models' => $models,
+                    'objReader' => $objReader,
+                    'objPHPExcel' => $objPHPExcel,
+                    'excelChar' => $excelChar
+        ]);
     }
 }
