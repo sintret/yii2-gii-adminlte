@@ -22,6 +22,7 @@ use kartik\builder\Form;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\FileInput;
 use kartik\widgets\SwitchInput;
+use mihaildev\ckeditor\CKEditor;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
@@ -65,7 +66,9 @@ use kartik\widgets\SwitchInput;
                         "pluginOptions" => $plugin
                     ]);
                     ?>';
-                } elseif ($type=='date'){
+                } elseif($attribute == 'description') {
+                    $fields[$l][] =  '<?= $form->field($model, "description")->widget(CKEditor::className(), ["editorOptions" => [ "preset" => "full", "inline" => false]]);?>';
+                }elseif ($type=='date'){
                     $fields[$l][] = '<?=
             $form->field($model, "release")->widget(DatePicker::classname(), [
                 "options" => ["placeholder" => "Enter date ..."],
