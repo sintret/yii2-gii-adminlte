@@ -244,7 +244,7 @@ class CropBehavior extends Behavior {
                 $name = $this->files[$value]->name;
                 if ($this->files[$value]->saveAs($folder . $name)) {
 
-                    SintretImagine::thumbnail($folder . $name, $this->width, $this->height)
+                    SintretImagine::thumbnail($folder . $name, $this->width, $this->height,\Imagine\Image\ImageInterface::THUMBNAIL_INSET)
                             ->save(Yii::getAlias($thumb . $name), ['quality' => $this->quality]);
                 }
             }
