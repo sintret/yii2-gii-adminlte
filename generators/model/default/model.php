@@ -101,7 +101,6 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     }
     
     public function getUserCreateLabel() {
-
         $user = User::find()->select('username')->where(['id' => $this->userCreate])->one();
         return $user->username;
     }
