@@ -20,7 +20,7 @@ setting in your config like these following :
     ];
 
 add table 
-
+<pre>
 CREATE TABLE `log_upload` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `userId` INT(11) DEFAULT NULL,
@@ -38,7 +38,8 @@ CREATE TABLE `log_upload` (
   `createDate` DATETIME DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB;
-
+</pre>
+<pre>
 CREATE TABLE `tbl_dynagrid` (
   `id` VARCHAR(100) NOT NULL COMMENT 'Unique dynagrid setting identifier',
   `filter_id` VARCHAR(100) DEFAULT NULL COMMENT 'Filter setting identifier',
@@ -50,8 +51,8 @@ CREATE TABLE `tbl_dynagrid` (
   CONSTRAINT `tbl_dynagrid_FK1` FOREIGN KEY (`filter_id`) REFERENCES `tbl_dynagrid_dtl` (`id`),
   CONSTRAINT `tbl_dynagrid_FK2` FOREIGN KEY (`sort_id`) REFERENCES `tbl_dynagrid_dtl` (`id`)
 ) ENGINE=INNODB;
-
-
+</pre>
+<pre>
 CREATE TABLE `tbl_dynagrid_dtl` (
   `id` VARCHAR(100) NOT NULL COMMENT 'Unique dynagrid detail setting identifier',
   `category` VARCHAR(10) NOT NULL COMMENT 'Dynagrid detail setting category "filter" or "sort"',
@@ -61,3 +62,4 @@ CREATE TABLE `tbl_dynagrid_dtl` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `tbl_dynagrid_dtl_UK1` (`name`,`category`,`dynagrid_id`)
 ) ENGINE=INNODB;
+</pre>
