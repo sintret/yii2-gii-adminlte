@@ -170,7 +170,12 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             'deleteOptions' => ['title' => 'delete', 'data-toggle' => 'tooltip'],
         ],
         [
-            'class' => 'kartik\grid\CheckboxColumn',
+            'class' => '\kartik\grid\CheckboxColumn',
+            'checkboxOptions' => [
+                'class' => 'simple'
+            ],
+            //'pageSummary' => true,
+            'rowSelectedClass' => GridView::TYPE_SUCCESS,
         ],
     ];
     
