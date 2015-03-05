@@ -87,7 +87,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['delete'],
+                        'actions' => ['delete', 'delete-all'],
                         'roles' => ['admin']
                     ],
                     [
@@ -379,5 +379,14 @@ if (count($pks) === 1) {
                     'objPHPExcel' => $objPHPExcel,
                     'excelChar' => $excelChar
         ]);
+    }
+    public function actionDeleteAll() {
+        $pk = Yii::$app->request->post('pk'); // Array or selected records primary keys
+        $explode = explode(",", $pk);
+        if ($explode)
+            foreach ($explode as $v) {
+                $this->findModel($v)->delete();
+            }
+        echo 1;
     }
 }
