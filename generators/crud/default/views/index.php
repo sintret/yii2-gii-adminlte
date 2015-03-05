@@ -40,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             Html::a('<i class="glyphicon glyphicon-plus"></i>', ['<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/create'], ['type' => 'button', 'title' => 'Add ' . $this->title, 'class' => 'btn btn-success']) . ' ' .
             Html::a('<i class="fa fa-file-excel-o"></i>', ['<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/parsing'], ['type' => 'button', 'title' => 'Parsing Excel ' . $this->title, 'class' => 'btn btn-danger']) . ' ' .
             Html::button('<i class="fa fa-download"></i>', ['type' => 'button', 'title' => 'Excel Backup ' . $this->title, 'class' => 'btn btn-default','id'=>'backupExcel']) . ' ' .
+            Html::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'button', 'title' => 'Delete Selected ' . $this->title, 'class' => 'btn btn-danger', 'id' => 'deleteSelected']) . ' ' .
             Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Reset Grid']). ' '
 
             
@@ -206,4 +207,25 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 $this->registerJs('$(document).on("click", "#backupExcel", function(){
     var myUrl = window.location.href;
     location.href=myUrl.replace(/index/gi, "excel"); ;
-})');?>
+});$("#deleteSelected").on("click",function(){
+var array = "";
+$(".simple").each(function(index){
+    if($(this).prop("checked")){
+        array += $(this).val()+",";
+    }
+})
+if(array==""){
+    alert("No data selected?");
+} else {
+    if(window.confirm("Are You Sure to delete selected data?")){
+        $.ajax({
+            type:"POST",
+            url:"'.Yii::$app->urlManager->createUrl(['<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/delete-all']).'",
+            data :{pk:array},
+            success:function(){
+                location.href="";
+            }
+        });
+    }
+}
+});');?>
