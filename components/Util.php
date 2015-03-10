@@ -8,6 +8,7 @@
 
 namespace sintret\gii\components;
 
+use Yii;
 use yii\base\Component;
 
 class Util extends Component {
