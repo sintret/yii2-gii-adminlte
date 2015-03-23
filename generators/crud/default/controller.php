@@ -111,6 +111,22 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionIndex()
     {
+        $grid = 'grid-'.self::className();
+        if ($_GET['p_reset']) {
+            \Yii::$app->session->set($grid, "");
+        } else {
+            $rememberUrl = Yii::$app->session->get($grid);
+            $current = Url::current();
+            if ($rememberUrl != $current && $rememberUrl) {
+                Yii::$app->session->set($grid, "");
+                $this->redirect($rememberUrl);
+            }
+            if ($_GET['_pjax']) {
+                \Yii::$app->session->set($grid, "");
+                \Yii::$app->session->set($grid, Url::current());
+            }
+        }
+        
 <?php if (!empty($generator->searchModelClass)): ?>
         $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
