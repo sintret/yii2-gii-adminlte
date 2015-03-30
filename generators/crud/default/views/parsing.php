@@ -17,14 +17,16 @@ echo "<?php\n";
 ?>
 use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
-use kartik\builder\Form;
-use kartik\datecontrol\DateControl;
 use kartik\widgets\FileInput;
-use kartik\widgets\SwitchInput;
+use yii\helpers\Url;
+
 
 $this->title='Parsing / Upload  <?= $modelClass ?> excel';
 $this->params['breadcrumbs'][] = ['label' => ' <?= $modelClass ?>', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+//log variable
+$logId = Yii::$app->session->get($log);
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Operator */
@@ -68,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php echo "?>\n";?>
                 </div>
             </div>
-            <div class="notifications"></div>
+            <div class="notifications" <?php if(empty($logId)){ echo 'style="display: none"';}?>>Please wait, while loading.... <img src="<?php echo Url::to('@web/img/loadingAnimation.gif');?>"></div>
             
             <?php echo "<?php\n";?>
             ActiveForm::end();
@@ -87,11 +89,12 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php echo "<?php \n";?>
-if(Yii::$app->session->get($log)){
+if($logId)
+    {
 $this->registerJs('$(document).ready(function(){ $.ajax({
         type:"POST",
         url:"' . Yii::$app->urlManager->createUrl([$route,'id'=>Yii::$app->session->get($log)]) . '",
-        beforeSend:function(){ $("#notifications").html("'.yii\helpers\Url::to("@web/img/loadingAnimation.gif").'");},
+        beforeSend:function(){ $(".notifications").show();},
         success:function(html){
             $(".notifications").html(html);
         }
