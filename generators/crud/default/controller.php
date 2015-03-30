@@ -303,6 +303,7 @@ if (count($pks) === 1) {
             } else {
                 $model->type = LogUpload::TYPE_INSERT;
             }
+            $model->keys = \yii\helpers\Json::encode($fields);
             $model->values = \yii\helpers\Json::encode($values);
             if ($model->save()) {
                 $log = 'log_<?= $modelClass ?>'. Yii::$app->user->id;
@@ -323,29 +324,21 @@ if (count($pks) === 1) {
     public function actionParsingLog($id) {
         $mod = LogUpload::findOne($id);
         $type = $mod->type;
-        $params = \yii\helpers\Json::decode($mod->params);
+        $keys = \yii\helpers\Json::decode($mod->keys);
         $values = \yii\helpers\Json::decode($mod->values);
         $modelAttribute = new <?= $modelClass ?>;
         $not = Util::excelNot();
-        foreach ($modelAttribute->attributeLabels() as $k=>$v){
-            if(!in_array($k, $not)){
-                $attr[] = $k;
-            }
-        }
-            
+        
             foreach ($values as $value) {
                 if ($type == LogUpload::TYPE_INSERT)
                     $model = new <?= $modelClass ?>;
                 else
                     $model = <?= $modelClass ?>::findOne($value['id']);
 
-                foreach ($attr as $at) {
-                    if (isset($value[$at])) {
-                        if ($value[$at]) {
-                            $model->$at = trim($value[$at]);
-                        }
-                    }
+                foreach ($keys as $v) {
+                        $model->$v = $value[$v];
                 }
+                
                 $e = 0;
                 if ($model->save()) {
                     $model = NULL;
