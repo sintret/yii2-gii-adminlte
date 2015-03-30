@@ -21,6 +21,7 @@ class Notification extends \yii\db\ActiveRecord {
 
     // user model for relation with table user
     public $userModel;
+    public static $icon = ['User' => 'fa fa-users', 'Member' => 'fa fa-users', 'Upload' => 'fa fa-upload', 'Order' => 'fa fa-shopping-cart'];
 
     /**
      * @inheritdoc
@@ -85,7 +86,7 @@ class Notification extends \yii\db\ActiveRecord {
         return static::find()->count();
     }
 
-    public static function notification() {
+    public static function notification($array = NULL) {
         $models = static::find()->orderBy('id desc')->all();
         $return = '';
         $return .='<li class="dropdown notifications-menu">
@@ -100,7 +101,24 @@ class Notification extends \yii\db\ActiveRecord {
                                     <ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">';
         if ($models)
             foreach ($models as $model) {
-                $return .='<li><a href="#">'.self::icon($model->params) . ' '. $model->message . ' <small style="color:green">' . $model->timeago . '</small></a></li>';
+                $params = $model->params;
+                if ($params) {
+                    $json = json_decode($params, true);
+                    if (array_key_exists("link", $json)) {
+                        $link = $json['link'];
+                        if ($link) {
+                            if (isset($link['controller'])) {
+                                $url = \yii\helpers\Url::to([$link['controller'] . '/' . $link['method'], 'id' => $json['id']]);
+                            } else {
+                                $url = $link;
+                            }
+                        }
+                    } else {
+                        $url = '#';
+                    }
+                }
+
+                $return .='<li><a href="' . $url . '">' . self::icon($params, $array) . ' ' . $model->message . ' <small style="color:green">' . $model->timeago . '</small></a></li>';
             }
         $return .='</ul><div class="slimScrollBar" style="width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 0px; z-index: 99; right: 1px; height: 156.862745098039px; background: rgb(0, 0, 0);"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 0px; opacity: 0.2; z-index: 90; right: 1px; background: rgb(51, 51, 51);"></div></div>';
         $return .=' <li class="footer"><a href="' . \yii\helpers\Url::to(["/notification/index"]) . '">View all</a></li></ul></li>';
@@ -113,21 +131,25 @@ class Notification extends \yii\db\ActiveRecord {
             return Enum::timeElapsed($this->createDate);
     }
 
-    public static function icon($json) {
+    public static function icon($json, $array = NULL) {
         $model = '';
         $return = '';
+        $icon = '';
         if ($json)
             $params = json_decode($json, true);
-        if ($params)
+        if ($params) {
             $model = $params['model'];
-
-        if ($model == 'User') {
-            $return = '<i class="fa fa-users"></i>';
-        } else {
-            $return = '<i class="fa fa-upload"></i>';
         }
-
-        return $return;
+        if ($array) {
+            $icon = $array[$model];
+        } else {
+            if (array_key_exists($model, self::$icon)) {
+                $icon = self::$icon[$model];
+            } else {
+                $icon = 'fa fa-envelope';
+            }
+        }
+        return '<i class="' . $icon . '"></i>';
     }
 
 }
