@@ -70,7 +70,7 @@ $logId = Yii::$app->session->get($log);
                     <?php echo "?>\n";?>
                 </div>
             </div>
-            <div class="notifications" <?php if(empty($logId)){ echo 'style="display: none"';}?>>Please wait, while loading.... <img src="<?php echo Url::to('@web/img/loadingAnimation.gif');?>"></div>
+            <div class="notifications" <?php if(empty($logId)){ echo 'style="display: none"';}?>>Please wait, while loading.... <img src="<?php echo \yii\helpers\Url::to('@web/img/loadingAnimation.gif');?>"></div>
             
             <?php echo "<?php\n";?>
             ActiveForm::end();
