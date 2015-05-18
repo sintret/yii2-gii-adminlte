@@ -87,7 +87,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         <?= $relation[0] . "\n" ?>
     }
 <?php endforeach; ?>
-    
+    /*
     public function beforeSave($insert) {
         if ($this->isNewRecord) {
             $this->createDate = date('Y-m-d H:i:s');
@@ -99,6 +99,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         }
         return parent::beforeSave($insert);
     }
+    */
     
     public function getUserCreateLabel() {
         $user = User::find()->select('username')->where(['id' => $this->userCreate])->one();
