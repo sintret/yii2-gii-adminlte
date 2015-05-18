@@ -19,10 +19,10 @@ echo "<?php\n";
 use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
-use kartik\datecontrol\DateControl;
 use kartik\widgets\FileInput;
 use kartik\widgets\SwitchInput;
 use mihaildev\ckeditor\CKEditor;
+use kartik\widgets\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
@@ -70,7 +70,7 @@ use mihaildev\ckeditor\CKEditor;
                     $fields[$l][] =  '<?= $form->field($model, "description")->widget(CKEditor::className(), ["editorOptions" => [ "preset" => "full", "inline" => false]]);?>';
                 }elseif ($type=='date'){
                     $fields[$l][] = '<?=
-            $form->field($model, "release")->widget(DatePicker::classname(), [
+            $form->field($model, "'.$attribute.'")->widget(DatePicker::classname(), [
                 "options" => ["placeholder" => "Enter date ..."],
                 "pluginOptions" => [
                     "autoclose" => true,
