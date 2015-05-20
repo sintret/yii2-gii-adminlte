@@ -18,8 +18,6 @@ echo "<?php\n";
 namespace <?= $generator->ns ?>;
 
 use Yii;
-use <?= $generator->ns ?>\User;
-
 
 /**
  * This is the model class for table "<?= $generator->generateTableName($tableName) ?>".
@@ -87,30 +85,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         <?= $relation[0] . "\n" ?>
     }
 <?php endforeach; ?>
-    /*
-    public function beforeSave($insert) {
-        if ($this->isNewRecord) {
-            $this->createDate = date('Y-m-d H:i:s');
-            $this->userCreate = Yii::$app->user->id;
-            $this->userUpdate = Yii::$app->user->id;
-        } else {
-            $this->updateDate = date('Y-m-d H:i:s');
-            $this->userUpdate = Yii::$app->user->id;
-        }
-        return parent::beforeSave($insert);
-    }
-    */
-    
-    public function getUserCreateLabel() {
-        $user = User::find()->select('username')->where(['id' => $this->userCreate])->one();
-        return $user->username;
-    }
 
-    public function getUserUpdateLabel() {
-        $user = User::find()->select('username')->where(['id' => $this->userUpdate])->one();
-        return $user->username;
-    }
-    
     <?php if($image){ ?>
     public static $imagePath = '@webroot/images/<?= strtolower($className) ?>/';
 
