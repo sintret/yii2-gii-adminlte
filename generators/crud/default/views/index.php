@@ -71,7 +71,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             'format' => 'html',
             'filter' => User::dropdown(),
             'value' => function($data) {
-                return $data->userCreateLabel;
+                return $data->userCreate;
             },
         ], \n";
         } elseif($name=='userUpdate'){
@@ -80,7 +80,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             'format' => 'html',
             'filter' => User::dropdown(),
             'value' => function($data) {
-                return $data->userUpdateLabel;
+                return $data->userUpdate;
             },
         ],  \n";
             
@@ -121,7 +121,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         <?php } elseif($name=='userCreate'){ ?>
             ['attribute' => 'userCreate','format' => 'html','filter' => User::dropdown(),
             'value' => function($data) {
-                return $data->userCreateLabel;
+                return $data->userCreate;
             },
         ],
         <?php } elseif($name=='userUpdate'){ ?>
@@ -130,7 +130,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             'format' => 'html',
             'filter' => User::dropdown(),
             'value' => function($data) {
-                return $data->userUpdateLabel;
+                return $data->userUpdate;
             },
             ],
             
