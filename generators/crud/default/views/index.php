@@ -18,8 +18,6 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\dynagrid\DynaGrid;
 use <?= $explode[0];?>\<?= $explode[1];?>\User;
-use yii\helpers\Url;
-
 /* @var $this yii\web\View */
 <?= !empty($generator->searchModelClass) ? "/* @var \$searchModel " . ltrim($generator->searchModelClass, '\\') . " */\n" : '' ?>
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -65,49 +63,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             
             echo "     ['attribute' => 'image', 'format' => 'html', 'value' => function($data) { return $data->thumb;}], \n";
          
-        } elseif($name=='userCreate'){
-            echo "      [
-            'attribute' => 'userCreate',
-            'format' => 'html',
-            'filter' => User::dropdown(),
-            'value' => function($data) {
-                return $data->userCreate;
-            },
-        ], \n";
-        } elseif($name=='userUpdate'){
-            echo "         [
-            'attribute' => 'userUpdate',
-            'format' => 'html',
-            'filter' => User::dropdown(),
-            'value' => function($data) {
-                return $data->userUpdate;
-            },
-        ],  \n";
-            
-        }elseif($name=='createDate'){
-            echo "      [
-            'attribute' => 'createDate',
-            'filterType' => GridView::FILTER_DATE,
-            'format' => 'raw',
-            'width' => '170px',
-            'filterWidgetOptions' => [
-                'pluginOptions' => ['format' => 'yyyy-mm-dd']
-            ],
-        ],    \n";
-            
-        }elseif($name=='updateDate'){
-            echo "   [
-            'attribute' => 'updateDate',
-            'filterType' => GridView::FILTER_DATE,
-            'format' => 'raw',
-            'width' => '170px',
-            'filterWidgetOptions' => [
-                'pluginOptions' => ['format' => 'yyyy-mm-dd']
-            ],
-        ],";
-        }
-        
-        
+        } 
         else 
             echo "            '" . $name . "',\n";
         
@@ -118,44 +74,6 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         $name = $column->name;
         if($name=='image'){ ?>
             ['attribute' => 'image', 'format' => 'html', 'value' => function($data) { return $data->thumb;}],
-        <?php } elseif($name=='userCreate'){ ?>
-            ['attribute' => 'userCreate','format' => 'html','filter' => User::dropdown(),
-            'value' => function($data) {
-                return $data->userCreate;
-            },
-        ],
-        <?php } elseif($name=='userUpdate'){ ?>
-            [
-            'attribute' => 'userUpdate',
-            'format' => 'html',
-            'filter' => User::dropdown(),
-            'value' => function($data) {
-                return $data->userUpdate;
-            },
-            ],
-            
-        <?php }elseif($name=='createDate'){ ?>
-            [
-            'attribute' => 'createDate',
-            'filterType' => GridView::FILTER_DATE,
-            'format' => 'raw',
-            'width' => '170px',
-            'filterWidgetOptions' => [
-                'pluginOptions' => ['format' => 'yyyy-mm-dd']
-            ],
-            ],
-            
-        <?php }elseif($name=='updateDate'){ ?>
-            [
-            'attribute' => 'updateDate',
-            'filterType' => GridView::FILTER_DATE,
-            'format' => 'raw',
-            'width' => '170px',
-            'filterWidgetOptions' => [
-                'pluginOptions' => ['format' => 'yyyy-mm-dd']
-            ],
-        ],
-                
         <?php } else 
             //echo "            '" . $format . "',\n";
         
