@@ -63,4 +63,4 @@ CREATE TABLE `tbl_dynagrid_dtl` (
   UNIQUE KEY `tbl_dynagrid_dtl_UK1` (`name`,`category`,`dynagrid_id`)
 ) ENGINE=INNODB;
 </pre>
-<p>If you want to parsing excel file to the system you must add folder "uploads" in under your folder web</p>
+<p>If you want to parsing excel file to the system you must add folder "uploads" under your folder web</p>
