@@ -21,8 +21,8 @@ use kartik\widgets\FileInput;
 use yii\helpers\Url;
 
 
-$this->title='Parsing / Upload  <?= $modelClass ?> excel';
-$this->params['breadcrumbs'][] = ['label' => ' <?= $modelClass ?>', 'url' => ['index']];
+$this->title='Parsing / Upload  <?= $model->tableName() ?> excel';
+$this->params['breadcrumbs'][] = ['label' => '<?= $model->tableName() ?>', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 //log variable
@@ -35,14 +35,14 @@ $logId = Yii::$app->session->get($log);
 <div class="sintret-update">
 
     <div class="page-header">
-        <h1>Parsing Excel <?= $modelClass ?></h1>
+        <h1>Parsing Excel <?= $model->tableName() ?></h1>
     </div>
 
 
-    <div class="<?= $modelClass ?>-form">
+    <div class="<?= $model->tableName() ?>-form">
 
 
-        <div class="<?= $modelClass ?>-form">
+        <div class="<?= $model->tableName() ?>-form">
             <?php echo "<?php\n";?>
             $form = ActiveForm::begin([
                         'type' => ActiveForm::TYPE_HORIZONTAL,
