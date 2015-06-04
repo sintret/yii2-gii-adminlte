@@ -85,7 +85,8 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         <?= $relation[0] . "\n" ?>
     }
 <?php endforeach; ?>
-   
+
+    
     <?php if($image){ ?>
     public static $imagePath = '@webroot/images/<?= strtolower($className) ?>/';
 
