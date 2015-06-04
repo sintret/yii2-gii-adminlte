@@ -19,6 +19,7 @@ echo "<?php\n";
 use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
+use kartik\datecontrol\DateControl;
 use kartik\widgets\FileInput;
 use kartik\widgets\SwitchInput;
 use mihaildev\ckeditor\CKEditor;
@@ -54,23 +55,23 @@ use kartik\widgets\DatePicker;
                     $l ='right';
                 }
 
+                
                 if ($attribute == 'image') {
                     $fields[$l][] =  '<?php
+                    $plugins = ["options"=>["accept"=>"image/*"]];
                     if ($model->image) {
-                         $plugin = [
-                             "initialPreview" => [kartik\helpers\Html::img($model->thumbnailTrue, ["class" => "file-preview-image"])]
-                         ];
+                        $plugins = [
+                                "options"=>["accept"=>"image/*"],
+                                "pluginOptions" => ["initialPreview" => [kartik\helpers\Html::img($model->thumbnailTrue, ["class" => "file-preview-image"])]]
+                                ];
                      }
-                    echo $form->field($model, "image")->widget(FileInput::classname(), [
-                        "options" => ["accept" => "image/*"],
-                        "pluginOptions" => $plugin
-                    ]);
+                    echo $form->field($model, "image")->widget(FileInput::classname(),$plugins);
                     ?>';
                 } elseif($attribute == 'description') {
                     $fields[$l][] =  '<?= $form->field($model, "description")->widget(CKEditor::className(), ["editorOptions" => [ "preset" => "full", "inline" => false]]);?>';
                 }elseif ($type=='date'){
                     $fields[$l][] = '<?=
-            $form->field($model, "'.$attribute.'")->widget(DatePicker::classname(), [
+            $form->field($model, "release")->widget(DatePicker::classname(), [
                 "options" => ["placeholder" => "Enter date ..."],
                 "pluginOptions" => [
                     "autoclose" => true,
@@ -113,4 +114,3 @@ use kartik\widgets\DatePicker;
         <?= "<?php " ?>ActiveForm::end(); ?>
 
 </div>
-
