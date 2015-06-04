@@ -52,12 +52,12 @@ if($num){
 }
 ?>
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use sintret\gii\models\LogUpload;
 use sintret\gii\components\Util;
-use yii\helpers\Url;
 
 
 /**
@@ -114,7 +114,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function actionIndex()
     {
         $grid = 'grid-'.self::className();
-        if ($_GET['p_reset']) {
+        $reset = Yii::$app->getRequest()->getQueryParam('p_reset');
+        if ($reset) {
             \Yii::$app->session->set($grid, "");
         } else {
             $rememberUrl = Yii::$app->session->get($grid);
@@ -123,7 +124,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 Yii::$app->session->set($grid, "");
                 $this->redirect($rememberUrl);
             }
-            if ($_GET['_pjax']) {
+            if (Yii::$app->getRequest()->getQueryParam('_pjax')) {
                 \Yii::$app->session->set($grid, "");
                 \Yii::$app->session->set($grid, Url::current());
             }
@@ -246,7 +247,7 @@ if (count($pks) === 1) {
         $template = Util::templateExcel();
         $model = new <?= $modelClass ?>;
         $date = date('YmdHis');
-        $name = $date.<?= $modelClass ?>;
+        $name = $date.'<?= $modelClass ?>';
         //$attributes = $model->attributeLabels();
         $models = <?= $modelClass ?>::find()->all();
         $excelChar = Util::excelChar();
@@ -265,7 +266,13 @@ if (count($pks) === 1) {
     }
     
     public function actionParsing() {
+        $num = 0;
+        $fields = [];
+        $values = [];
+        $log = '';
+        $route = '';
         $model = new LogUpload;
+        
         $date = date('Ymdhis') . Yii::$app->user->identity->id;
 
         if (Yii::$app->request->isPost) {
@@ -282,9 +289,7 @@ if (count($pks) === 1) {
             $model->fileori = $fileOri;
             $model->filename = $filename;
 
-            $num = 0;
-            $fields = [];
-            $values = [];
+
             if ($params)
                 foreach ($params as $k => $v) {
                     foreach ($v as $key => $val) {
@@ -319,7 +324,7 @@ if (count($pks) === 1) {
         }
         $route = '<?= strtolower($modelClass) ?>/parsing-log';
 
-        return $this->render('parsing', ['model' => $model, 'array' => $array,'log'=>$log,'route'=>$route]);
+        return $this->render('parsing', ['model' => $model,'log'=>$log,'route'=>$route]);
     }
     
     public function actionParsingLog($id) {
@@ -396,6 +401,7 @@ if (count($pks) === 1) {
         $explode = explode(",", $pk);
         if ($explode)
             foreach ($explode as $v) {
+                if($v)
                 $this->findModel($v)->delete();
             }
         echo 1;
