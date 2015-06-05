@@ -23,10 +23,6 @@ use Yii;
  * This is the model class for table "<?= $generator->generateTableName($tableName) ?>".
  *
 <?php foreach ($tableSchema->columns as $column): ?>
-<?php if($column->name == 'image'){
-  $image = $column->name;  
-}
-?>
  * @property <?= "{$column->phpType} \${$column->name}\n" ?>
 <?php endforeach; ?>
 <?php if (!empty($relations)): ?>
@@ -87,21 +83,19 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 <?php endforeach; ?>
 
     
-    <?php if($image){ ?>
+    <?php if($column->name == 'image'){ ?>
     public static $imagePath = '@webroot/images/<?= strtolower($className) ?>/';
 
     public function getImageTrue() {
-        $image = $this->image;
-        if ($image) {
+        if ($this->image) {
             return Yii::getAlias($this->image);
         }
     }
 
     public function getThumbnailTrue() {
-        $image = $this->image;
-        if ($image) {
-            $name = \yii\helpers\StringHelper::basename($image);
-            $dir = \yii\helpers\StringHelper::dirname($image);
+        if ($this->image) {
+            $name = \yii\helpers\StringHelper::basename($this->image);
+            $dir = \yii\helpers\StringHelper::dirname($this->image);
             return Yii::getAlias($dir . '/thumb/' . $name);
         }
     }
